@@ -46,24 +46,26 @@
   </div>
 
   <h2 id="android">Install on Android</h2>
+  <div class="note">The Play Store listing is <b>in progress</b>. Until it is live, install the
+    APK attached to the latest
+    <a href="https://github.com/moyibr/GymBro-Training/releases" rel="noopener">GitHub release</a>.</div>
   <ol>
-    <li>Open <a href="/#download">the download</a> on your phone and tap <b>Download for Android</b>.</li>
+    <li>Open the release page on your phone and download <code>app-release.apk</code>.</li>
     <li>Your browser will ask whether it may install apps — allow it. This is standard for
         any app installed outside the Play Store (called <i>sideloading</i>), and you can
         revoke the permission right after.</li>
-    <li>Open the downloaded <code>GymBro.apk</code>, confirm, done. No account, no setup.</li>
+    <li>Open the downloaded file, confirm, done. No account, no setup.</li>
   </ol>
-  <div class="note">GymBro is deliberately <b>not</b> on the Play Store — no store account
-    between you and an open-source app. The APK is signed; updates install over the old
-    version and keep your data.</div>
+  <p>Every release is signed with the same key, so updates install over the old version and
+     keep your data — including once the Play Store version takes over.</p>
   <p>Everything is stored on the phone itself. The only things fetched from the internet are
      the exercise images and animations (from a CDN, on demand).</p>
 
   <h2 id="iphone">Use on iPhone</h2>
-  <p>Apple does not allow installing apps outside the App Store, so there is no iOS download —
-     that's a platform rule, not a choice we made. What works instead:</p>
+  <p>The App Store listing is being prepared — Apple allows no other way to install an app on
+     an iPhone, so until it is live, these are the options:</p>
   <ul>
-    <li><b>Self-host + home screen (recommended):</b> open your own GymBro instance in
+    <li><b>Self-host + home screen:</b> open your own GymBro instance in
         Safari → <b>Share</b> → <b>Add to Home Screen</b>. You get a full-screen app with its
         own icon, passkey sign-in and sync — no expiry, no fees.</li>
     <li><b>Build it onto your own iPhone:</b> with a Mac and Xcode, the native app runs on
@@ -129,10 +131,14 @@ docker compose up -d</code></pre>
   <p>None. There is no telemetry, no analytics, no crash reporting. The mobile app's only
      network traffic is fetching exercise media from a CDN; a self-hosted instance talks only
      to your own server.</p>
-  <h3>Why isn't it on the Play Store / App Store?</h3>
-  <p>By choice (and on iOS, by Apple's rules for sideloading). Store accounts cost money,
-     impose terms that sit badly with the AGPL, and put a gatekeeper between you and an app
-     whose whole point is that your data is yours.</p>
+  <h3>Is it on the Play Store / App Store?</h3>
+  <p>Both listings are being prepared. GymBro is AGPL-3.0, whose terms sit badly with store
+     rules on their own — what makes store distribution possible is an app-store exception
+     granted by the original author under AGPL section 7, on the condition that the source
+     stays public. It does:
+     <a href="https://github.com/moyibr/GymBro-Training" rel="noopener">the whole app is on GitHub</a>.
+     Until the listings are live, Android installs from a GitHub release and iOS builds from
+     source.</p>
   <h3>Mobile app or self-hosted — which one should I pick?</h3>
   <p>If you just want to track your training: the mobile app. If you want your data on your
      own hardware, synced across devices, with profiles for the people you train with: self-host.
