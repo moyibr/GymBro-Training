@@ -69,8 +69,24 @@ edit('ios/App/App.xcodeproj/project.pbxproj', [
 ])
 // The API ships alongside the self-hosted flavor of the same release, so it carries the same
 // number. It drifted to upstream's 1.2.3 once already, which is the argument for automating it.
-edit('../api/package.json', [
-  [/"version": "[^"]*"/, `"version": "${version}"`]
+//
+// The lockfiles carry the version twice (root and packages[""]) and have to move with it: `npm ci`
+// — which is what the Docker builds and CI run — refuses a lockfile that disagrees with its
+// package.json. Only those first two occurrences are touched; every other "version" in the file
+// belongs to a dependency.
+// A lockfile records its own package's version in two places, and both have to move with
+// package.json: `npm ci` — what CI and both Dockerfiles run — refuses a lockfile that disagrees
+// with it. Only the root entries are rewritten; every other "version" in the file belongs to a
+// dependency, hence the anchored patterns rather than a blanket replace.
+// `\s` rather than `\n` between the lines: these files are checked out with CRLF endings on
+// Windows, and a pattern that only knows about \n silently matches nothing there.
+const syncLock = lockPath => edit(lockPath, [
+  [/^(\s*"version": ")[^"]*(",)\s*$/m, `$1${version}$2`],
+  [/("": \{\s*"name": "[^"]*",\s*"version": ")[^"]*(")/, `$1${version}$2`]
 ])
+syncLock('package-lock.json')
+
+edit('../api/package.json', [[/"version": "[^"]*"/, `"version": "${version}"`]])
+syncLock('../api/package-lock.json')
 
 console.log(`GymBro ${version} — versionCode/CURRENT_PROJECT_VERSION ${code}`)
