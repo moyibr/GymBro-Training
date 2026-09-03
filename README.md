@@ -143,8 +143,12 @@ The mobile app uses none of the server half: state is mirrored from `localStorag
 
 ## Your data
 
-**Mobile app:** on the phone only, in the app's private storage. Nothing is uploaded, there is
-no analytics SDK, and backups leave through the OS share sheet when you ask for one.
+**Mobile app:** on the phone, in the app's private storage. GymBro uploads nothing, there is no
+analytics SDK, and backups leave through the OS share sheet when you ask for one. The one thing
+that does travel is your *device's* backup: Android Auto Backup and iCloud include the training
+log (`gymbro-state.json` and nothing else — see `android/app/src/main/res/xml/backup_rules.xml`),
+in your own Google/Apple account. That is deliberate — without a server it is all that stands
+between a lost phone and a lost history — and switchable off in system settings.
 
 **Self-hosted:** in `./data` on your host — `db.json` (profiles + public passkeys),
 `state-<user>.json` (each user's plan, workouts, body weight, settings), and `secret`.

@@ -40,6 +40,13 @@ jobs:
       - run: npm ci
         working-directory: frontend
 
+      # Same gate as the Android workflow: a tag must not produce a TestFlight build from a tree
+      # whose tests fail.
+      - run: npm test
+        working-directory: frontend
+      - run: node scripts/check-locales.mjs
+        working-directory: frontend
+
       - run: npm run build:mobile
         working-directory: frontend
 

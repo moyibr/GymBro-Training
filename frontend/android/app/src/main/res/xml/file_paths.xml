@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- What the FileProvider may hand to another app. GymBro shares exactly one kind of file: a
+     backup or plan export written to the cache directory, passed to the OS share sheet.
+     Capacitor's template also declares <external-path path="."/> — the whole of external storage.
+     Nothing here writes there, so it is dropped rather than left as a capability nobody uses. -->
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="my_images" path="." />
     <cache-path name="my_cache_images" path="." />
 </paths>

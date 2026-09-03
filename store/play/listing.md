@@ -22,7 +22,7 @@ Plan your week, log every set, track your weight. No account, no ads, offline.
 ```
 GymBro is a gym and body-weight tracker that keeps its hands off your data. There is no
 account to create, no subscription, no ads and no analytics — your training log lives on your
-phone and goes nowhere else.
+phone, not on our servers.
 
 PLAN YOUR WEEK
 Build a routine for each training day from a library of 1,324 exercises, each with an animated

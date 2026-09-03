@@ -48,13 +48,24 @@ jobs:
       - run: npm ci
         working-directory: frontend
 
+      # A tag must not be able to produce an uploadable artifact from a tree that fails its own
+      # tests — especially not one this workflow may push straight to a Play track.
+      - run: npm test
+        working-directory: frontend
+      - run: node scripts/check-locales.mjs
+        working-directory: frontend
+
       # Bakes the offline flavor and the CDN media base, then `cap sync` into android/.
       - run: npm run build:mobile
         working-directory: frontend
 
+      # Through env, not `${{ }}` interpolation: an expression is spliced into the generated run
+      # script, so a value with shell metacharacters in it breaks the build in confusing ways.
       - name: Decode keystore
         if: env.HAS_KEYSTORE == 'yes'
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > frontend/android/release.jks
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -d > frontend/android/release.jks
 
       - name: Build AAB + APK
         working-directory: frontend/android
@@ -85,7 +96,9 @@ jobs:
       # the first upload has to be anyway, since the listing doesn't exist yet.
       - name: Upload to Play internal testing
         if: env.HAS_KEYSTORE == 'yes' && env.HAS_PLAY_KEY == 'yes' && startsWith(github.ref, 'refs/tags/v')
-        uses: r0adkll/upload-google-play@v1
+        # Pinned by digest: this action is handed the credential that can publish to your
+        # listing, so it should not be a tag someone else can move.
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: io.github.moyibr.gymbro

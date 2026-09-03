@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android Auto Backup, API 30 and below (android:fullBackupContent).
+     An <include> makes this a whitelist: Android backs up the named path and nothing else.
+     gymbro-state.json is the durable copy of the training log — the same file the app restores
+     from on launch — so a user who loses or replaces their phone gets their history back, and
+     nothing else about the app travels with it.
+     This is a deliberate choice, disclosed in the privacy policy: the backup goes to the user's
+     own Google account, encrypted with their device PIN, and they can turn it off in Settings →
+     Google → Backup. To ship an app that never leaves the device at all, set
+     android:allowBackup="false" in AndroidManifest.xml and delete this file. -->
+<full-backup-content>
+    <include domain="file" path="gymbro-state.json" />
+</full-backup-content>

@@ -67,5 +67,10 @@ edit('ios/App/App.xcodeproj/project.pbxproj', [
   [/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${version};`],
   [/CURRENT_PROJECT_VERSION = [^;]+;/g, `CURRENT_PROJECT_VERSION = ${code};`]
 ])
+// The API ships alongside the self-hosted flavor of the same release, so it carries the same
+// number. It drifted to upstream's 1.2.3 once already, which is the argument for automating it.
+edit('../api/package.json', [
+  [/"version": "[^"]*"/, `"version": "${version}"`]
+])
 
 console.log(`GymBro ${version} — versionCode/CURRENT_PROJECT_VERSION ${code}`)

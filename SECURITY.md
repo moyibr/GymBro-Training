@@ -1,14 +1,20 @@
 # Security policy
 
-GymBro is a self-hosted app: you run the server, you hold the data. This file says which
-versions get fixes, how to report something privately, and — the part most people actually
-need — what the app protects you from and what it doesn't.
+GymBro ships two ways — a standalone mobile app that talks to no server at all, and a
+self-hosted web app where you run the server and hold the data. This file says which versions
+get fixes, how to report something privately, and — the part most people actually need — what
+the app protects you from and what it doesn't.
 
 ## Supported versions
 
-Only the **latest release**. Releases are semver tags (`v1.0.0` → `v1.2.3`, see
+Only the **latest release**. Releases are semver tags starting at `v1.0.0` (see
 [CHANGELOG.md](CHANGELOG.md)); there is no LTS or maintenance branch and older tags are never
-patched. A fix ships in the next release and in the `latest` images on ghcr.io.
+patched. A fix ships in the next release, in the `latest` images on ghcr.io, and in the next
+store build.
+
+GymBro is a fork of [openGym](https://github.com/DuarteSantos8/openGym): a vulnerability in code
+inherited from upstream is worth reporting there too, so instances that never heard of this fork
+get the fix as well.
 
 Updating a self-hosted instance:
 

@@ -18,16 +18,16 @@ done — this is the account and paperwork side.
 
 ## Order of operations
 
-### 1. Before either account (do this today)
+### 1. Before either account
 
-- [ ] Push this repository to `github.com/moyibr/GymBro-Training`, public — the AGPL and the
-      app-store exception in [NOTICE.md](../NOTICE.md) both hinge on the source staying available.
-- [ ] Publish the privacy policy so it has a real URL. In the repo: **Settings → Pages →
-      Source: GitHub Actions**. The `pages.yml` workflow then puts the site at
-      `https://moyibr.github.io/GymBro-Training/` and the policy at
-      `…/privacy.html` (the app demo lands at `…/demo/`). Open the URL in a private window
-      before pasting it into either console — **both stores refuse a listing without a
-      reachable privacy-policy URL**, and they do check.
+- [x] **Repository is public** at <https://github.com/moyibr/GymBro-Training> — the AGPL and the
+      app-store exception in [NOTICE.md](../NOTICE.md) both hinge on the source staying available,
+      so keep it that way.
+- [x] **Privacy policy is live** at <https://moyibr.github.io/GymBro-Training/privacy.html> —
+      paste that into both consoles. (Pages is enabled with Source: GitHub Actions; `pages.yml`
+      publishes the site, with the app demo at `…/demo/`.) Open it in a private window before you
+      paste it: **both stores refuse a listing without a reachable privacy-policy URL**, and they
+      do check.
 - [ ] Create the release keystore and back it up — see [docs/RELEASE.md](../docs/RELEASE.md).
 - [ ] Take screenshots — see [screenshots.md](screenshots.md).
 

@@ -30,8 +30,8 @@ progression, 1RM curves and a body-weight chart. No account, no ads, no tracking
 
 ```
 GymBro is a gym and body-weight tracker that keeps its hands off your data. There is no account
-to create, no subscription, no ads and no analytics — your training log lives on your iPhone and
-goes nowhere else.
+to create, no subscription, no ads and no analytics — your training log lives on your iPhone, not
+on our servers.
 
 PLAN YOUR WEEK
 Build a routine for each training day from a library of 1,324 exercises, each with an animated

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ (API 31, android:dataExtractionRules) splits what Auto Backup used to cover into
+     two cases that now have to be answered separately. Both get the same answer as backup_rules.xml:
+     the training log, and nothing else.
+       cloud-backup   — backup to the user's Google account
+       device-transfer — direct transfer when they set up a new phone from the old one -->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="gymbro-state.json" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="gymbro-state.json" />
+    </device-transfer>
+</data-extraction-rules>

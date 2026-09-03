@@ -17,7 +17,9 @@ what is needed to service the request in the moment. GymBro:
 - has **no account, no sign-in, no server** — the mobile build compiles the sync and passkey
   code out entirely (`VITE_MOBILE=1`);
 - stores the training log, body-weight history and settings in `localStorage`, mirrored to
-  `gymbro-state.json` in the app's private container, both on-device;
+  `gymbro-state.json` in the app's private container, both on-device (that file sits in Documents,
+  so iCloud Backup includes it — the OS acting on the user's own account, not collection by the
+  app; disclosed in the privacy policy);
 - contains **no analytics, attribution, crash-reporting or advertising SDK**, and never touches
   the advertising identifier (`ATTrackingManager` is not linked);
 - schedules workout reminders as **local** notifications — no push server, no device token;

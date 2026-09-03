@@ -16,5 +16,9 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY web/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/dist /usr/share/nginx/html
+# Fail the image build on a malformed config instead of at somebody's `docker compose up`.
+# The CI job that builds this image is where a broken header snippet gets caught.
+RUN nginx -t
 # exercise media (img/gif) is mounted at runtime from the media volume

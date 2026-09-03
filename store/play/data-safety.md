@@ -9,9 +9,15 @@ statement about what the shipped APK/AAB actually does, and Play does test it.
 |---|---|
 | Does your app collect or share any of the required user data types? | **No** |
 | Is all of the user data collected by your app encrypted in transit? | *(n/a — nothing is collected)* |
-| Do you provide a way for users to request that their data is deleted? | *(n/a)* — data never leaves the device; uninstalling removes it |
+| Do you provide a way for users to request that their data is deleted? | *(n/a)* — nothing is collected, so there is nothing of the user's on any system of ours; uninstalling removes the app's data from the device |
 
-That single **No** is the whole form. It is accurate because:
+That single **No** is the whole form. Play's definition of *collected* is data your app transmits
+off the device; an Android Auto Backup to the user's own Google account is performed by the OS, not
+by the app, and Play's Data safety FAQ says explicitly that it does not need to be declared here.
+It is disclosed in the privacy policy anyway, and `backup_rules.xml` / `data_extraction_rules.xml`
+limit what is eligible for backup to the training log itself.
+
+The **No** is accurate because:
 
 - there is **no account, no sign-in and no server** in the mobile build (`VITE_MOBILE=1`
   compiles the sync and passkey code out entirely);

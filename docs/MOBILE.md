@@ -17,6 +17,12 @@ the app's private data directory on every change (iOS is allowed to evict WebVie
 pressure — the file mirror is the durable copy and is restored on launch). Backups go out
 through the OS share sheet instead of a browser download.
 
+That state file is also the one thing the platform backup systems carry: Android's rules files
+(`res/xml/backup_rules.xml`, `data_extraction_rules.xml`) whitelist it and nothing else, and on iOS
+it lives in Documents, which iCloud includes. Deliberate, and disclosed in the privacy policy — to
+ship an app that truly never leaves the device, set `android:allowBackup="false"` and exclude the
+file from iOS backup.
+
 ## Identity
 
 | | |

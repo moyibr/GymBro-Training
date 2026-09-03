@@ -10,11 +10,25 @@ source at <https://github.com/moyibr/GymBro-Training>.
 ## What GymBro stores, and where
 
 Everything you enter — your routines, weekly plan, logged workouts, body-weight history,
-settings and language — is stored **on your device only**, in the app's private storage. It is
-not uploaded anywhere. We never see it, because there is nowhere for it to arrive.
+settings and language — is stored **on your device**, in the app's private storage. GymBro never
+uploads it. We never see it, because there is nowhere for it to arrive: we run no server.
 
-Deleting the app deletes that data. There is no copy elsewhere to request or erase, and no
-backup unless you made one yourself.
+Deleting the app deletes that data, and there is no copy of it on any system of ours to request
+or erase.
+
+### Your device's own backup
+
+One exception is worth being precise about, because it is not us but it is real: **if you have
+device backup switched on, your phone's operating system includes GymBro's training log in it.**
+
+- **Android** — Auto Backup copies the app's data file to *your* Google account, encrypted with
+  your device PIN. GymBro limits what is eligible to the training log itself and nothing else.
+  Turn it off in Settings → Google → Backup.
+- **iPhone** — the app's data lives in its Documents folder, which iCloud Backup includes. Turn it
+  off in Settings → your name → iCloud → Manage Storage → Backups.
+
+This is deliberate: without a server, an OS backup is the only thing standing between a lost phone
+and a lost training history. It goes to your account, under your control, and never to us.
 
 ## What leaves your device
 
