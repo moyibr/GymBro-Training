@@ -18,7 +18,17 @@ FROM nginx:alpine
 COPY web/nginx.conf /etc/nginx/conf.d/default.conf
 COPY web/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/dist /usr/share/nginx/html
-# Fail the image build on a malformed config instead of at somebody's `docker compose up`.
-# The CI job that builds this image is where a broken header snippet gets caught.
-RUN nginx -t
+# Fail the image build on a malformed config instead of at somebody's `docker compose up` —
+# the CI job that builds this image is where a broken header snippet gets caught.
+#
+# The substitution is why this isn't a plain `nginx -t`: nginx resolves proxy_pass upstreams
+# while parsing, and the `api` container does not exist during an image build, so the real
+# config fails with "host not found in upstream". The check therefore runs against a copy with
+# that one hostname swapped for a literal address; every other line, the header snippet
+# included, is exactly what ships.
+RUN cp /etc/nginx/conf.d/default.conf /tmp/default.conf \
+ && sed -i 's|http://api:3000|http://127.0.0.1:3000|' /etc/nginx/conf.d/default.conf \
+ && nginx -t \
+ && cp /tmp/default.conf /etc/nginx/conf.d/default.conf \
+ && rm /tmp/default.conf
 # exercise media (img/gif) is mounted at runtime from the media volume
