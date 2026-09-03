@@ -36,12 +36,12 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       # Gradle 8.13 / AGP 8.11 want a JDK 17+; 21 is what Android Studio ships.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
 
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       # Play requires new apps to target API 36 — the runner image doesn't always carry it.
       - run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
@@ -72,7 +72,7 @@ jobs:
           echo "signed: ${{ env.HAS_KEYSTORE == 'yes' && 'yes' || 'NO — artifacts are unsigned' }}"
           ls -lh frontend/android/app/build/outputs/bundle/release/ frontend/android/app/build/outputs/apk/release/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gymbro-android
           if-no-files-found: error

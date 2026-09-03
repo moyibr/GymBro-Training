@@ -98,7 +98,7 @@ jobs:
             -exportOptionsPlist ExportOptions.plist \
             -exportPath "$RUNNER_TEMP/export"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: env.HAS_SIGNING == 'yes'
         with:
           name: gymbro-ios
