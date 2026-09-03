@@ -64,8 +64,11 @@ jobs:
           cp -r frontend/dist/* site/demo/
           test -f site/privacy.html && test -f site/demo/index.html
 
-      # enablement: turns Pages on for the repo the first time this runs, instead of failing
-      # with "Get Pages site failed" until someone visits Settings → Pages by hand.
+      # Pages has to be switched on once by a human: Settings → Pages → Source: GitHub Actions.
+      # `enablement: true` asks the action to create the site itself, but GITHUB_TOKEN has no
+      # repo-administration rights, so on a normal repo that call comes back "Resource not
+      # accessible by integration" — it only helps where a PAT with admin scope is in play.
+      # Until Pages is enabled, this job fails here and nothing else in the workflow runs.
       - uses: actions/configure-pages@v6
         with:
           enablement: true
