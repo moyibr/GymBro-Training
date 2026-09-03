@@ -76,3 +76,26 @@ jobs:
           load: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # The store builds go through `build:mobile`, which is a different Vite config (offline
+  # flavor, CDN media) plus a `cap sync` into android/ and ios/. A change that only breaks
+  # that path — a plugin import outside the MOBILE guard, a bad capacitor.config.json —
+  # would otherwise sail through the web build above and only fail on release day.
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build:mobile
+        working-directory: frontend
+      - name: The native projects got the web build
+        run: |
+          test -f frontend/android/app/src/main/assets/public/index.html
+          test -f frontend/ios/App/App/public/index.html
+          grep -q '"appId": "io.github.moyibr.gymbro"' frontend/android/app/src/main/assets/capacitor.config.json

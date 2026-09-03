@@ -1,14 +1,34 @@
 apply plugin: 'com.android.application'
 
+// Release signing, two ways in, so the same build works on a laptop and on a CI runner:
+//   • android/keystore.properties (git-ignored) — storeFile/storePassword/keyAlias/keyPassword
+//   • ANDROID_KEYSTORE_PATH / _PASSWORD / ANDROID_KEY_ALIAS / _PASSWORD env vars (GitHub Actions)
+// With neither present the release build is simply left unsigned instead of failing, so anyone
+// can `assembleRelease` to check the app still builds without holding the signing key.
+def keystorePropsFile = rootProject.file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+def ksPath = keystoreProps['storeFile'] ?: System.getenv('ANDROID_KEYSTORE_PATH')
+def ksPassword = keystoreProps['storePassword'] ?: System.getenv('ANDROID_KEYSTORE_PASSWORD')
+def ksAlias = keystoreProps['keyAlias'] ?: System.getenv('ANDROID_KEY_ALIAS')
+def ksKeyPassword = keystoreProps['keyPassword'] ?: System.getenv('ANDROID_KEY_PASSWORD')
+def ksFile = ksPath ? (new File(ksPath).isAbsolute() ? new File(ksPath) : rootProject.file(ksPath)) : null
+def canSign = ksFile != null && ksFile.exists() && ksPassword && ksAlias && ksKeyPassword
+if (ksPath && !canSign) {
+    logger.warn("GymBro: a keystore was configured but is incomplete or missing — release builds will be UNSIGNED.")
+}
+
 android {
-    namespace "ch.duartesantos.opengym"
+    namespace "io.github.moyibr.gymbro"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ch.duartesantos.opengym"
+        applicationId "io.github.moyibr.gymbro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.2.3"
+        versionCode 1000000
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +36,25 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (canSign) {
+                storeFile ksFile
+                storePassword ksPassword
+                keyAlias ksAlias
+                keyPassword ksKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            // R8 on the Capacitor bridge is a known source of release-only breakage (reflection
+            // into plugin classes), and the app is a web bundle — there is little Java to shrink.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (canSign) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

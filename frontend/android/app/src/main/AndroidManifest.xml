@@ -32,8 +32,8 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Workout-day reminder: lets the local-notifications plugin fire at the exact minute
-         on Android 12+. Where it isn't granted, scheduling silently falls back to inexact
-         alarms — the reminder still arrives, just not to the minute. -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- No SCHEDULE_EXACT_ALARM. Google Play gates that permission behind a declaration
+         form for alarm-clock-grade use cases, and a daily workout-day reminder is not one:
+         the plugin already falls back to setAndAllowWhileIdle(), so the reminder still
+         arrives, just inside a window rather than to the minute. -->
 </manifest>

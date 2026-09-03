@@ -3,6 +3,27 @@
 openGym — Copyright (C) 2026 Duarte Santos.
 openGym's own code is licensed under the **GNU AGPL v3.0** (see [LICENSE](LICENSE)).
 
+## GymBro — this fork
+
+GymBro is a fork of openGym, taken 3 September 2026 from
+[emilfunk/opengym](https://github.com/emilfunk/opengym) (itself a fork of
+[DuarteSantos8/openGym](https://github.com/DuarteSantos8/openGym) that added the AI Coach).
+
+Modified in this fork, per AGPL v3 §5(a):
+
+- Renamed the application to **GymBro** throughout the UI, the PWA manifest, the service worker
+  and the docs, and changed the native application id from `ch.duartesantos.opengym` to
+  `io.github.moyibr.gymbro`.
+- New app icon, splash screen and banner artwork; the original dumbbell geometry is retained.
+- Renamed the on-device state file, backup and plan-file names (`gymbro-*.json`) and the plan
+  bundle marker (`gymbro_plan`); files written by openGym are still accepted on import.
+- Added release signing, version syncing, GitHub Actions release workflows and the app-store
+  submission material under `store/`, so the app can be distributed through Google Play and
+  the App Store under the exception below.
+
+Everything else is openGym's work. Copyright in the unmodified portions remains with the
+original authors, and the whole of GymBro stays under the AGPL v3.0.
+
 ## App store exception
 
 As an additional permission under section 7 of the AGPL v3.0, the copyright holder permits

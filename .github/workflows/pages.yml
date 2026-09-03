@@ -1,16 +1,24 @@
-# Publishes the browser-only demo to GitHub Pages: https://duartesantos8.github.io/openGym/
+# Publishes the project site to GitHub Pages: https://moyibr.github.io/GymBro-Training/
 #
-# Pages serves static files only, so this build has no backend — VITE_DEMO=1 makes the app
-# boot straight into guest mode with a seeded example history (see frontend/src/lib/demo.js).
+# Two things live there:
+#   /            the hand-written marketing site in website/ — including privacy.html, which
+#                both app stores require to be reachable at a public URL before they will
+#                accept a listing.
+#   /demo/       the browser-only demo of the app itself. Pages serves static files, so this
+#                build has no backend: VITE_DEMO=1 boots straight into guest mode with a
+#                seeded example history (see frontend/src/lib/demo.js).
+#
 # The exercise images/GIFs (~140 MB) are never committed here; the demo build points at the
 # upstream dataset on jsDelivr instead, pinned to a commit so the CDN can cache it forever.
-name: Deploy demo to GitHub Pages
+name: Deploy site to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
       - 'frontend/**'
+      - 'website/**'
+      - 'assets/screenshots/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -44,10 +52,22 @@ jobs:
           VITE_DEMO: '1'
           VITE_IMG_BASE: ${{ env.DATASET }}/images/
           VITE_GIF_BASE: ${{ env.DATASET }}/videos/
+
+      # website/ has no build step; it just needs the assets it references at deploy time
+      # (see website/README.md): the screenshots as img/, and the PWA icons.
+      - name: Assemble the site
+        run: |
+          mkdir -p site/img site/demo
+          cp website/*.html website/styles.css website/site.js site/
+          cp assets/screenshots/*.png site/img/
+          cp frontend/public/icon-180.png frontend/public/icon-512.png site/
+          cp -r frontend/dist/* site/demo/
+          test -f site/privacy.html && test -f site/demo/index.html
+
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: frontend/dist
+          path: site
 
   deploy:
     needs: build

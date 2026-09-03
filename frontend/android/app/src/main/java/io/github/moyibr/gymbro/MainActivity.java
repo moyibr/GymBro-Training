@@ -1,4 +1,4 @@
-package ch.duartesantos.opengym;
+package io.github.moyibr.gymbro;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,5 +1,36 @@
 # Changelog
 
+## GymBro 1.0.0 — 3 September 2026
+
+The fork's first release: openGym, renamed **GymBro** and taken to the point where it can be
+submitted to Google Play and the App Store. The training engine, the exercise library and the
+UI are unchanged — this release is about identity and distribution.
+
+- **Renamed throughout** — app name, PWA manifest, service worker, docs and website. The native
+  application id changed from `ch.duartesantos.opengym` to `io.github.moyibr.gymbro`.
+- **New icon, splash and banner**, generated from two SVG sources by `npm run assets:generate`.
+- **Release signing** for Android, from `keystore.properties` locally or `ANDROID_*` secrets in
+  CI; release builds stay unsigned rather than failing when no key is present.
+- **`targetSdk` 36** (Play's requirement for new apps since 31 Aug 2026), AGP 8.11.1 / Gradle
+  8.13, and `adjustMarginsForEdgeToEdge: auto` so Android 16's edge-to-edge enforcement doesn't
+  put content under the system bars.
+- **`SCHEDULE_EXACT_ALARM` dropped** — Play gates it behind a declaration form that a daily
+  reminder doesn't qualify for. Reminders now schedule inexactly and arrive within a window.
+- **iOS store readiness** — `PrivacyInfo.xcprivacy` in the app target, portrait-only and
+  iPhone-only, `ITSAppUsesNonExemptEncryption=false`, and an `ExportOptions.plist` for CI.
+- **Release workflows** — `android-release.yml` (signed AAB + APK, optional Play upload) and
+  `ios-release.yml` (unsigned check, or signed IPA + TestFlight), both on `v*` tags.
+- **`npm run version:sync`** — one version in `package.json`, propagated to Gradle and Xcode
+  with derived, always-increasing build numbers.
+- **Store submission kit** under `store/` — listing copy, Data safety and App Privacy answers,
+  review notes, screenshot specs, privacy policy (also published at `website/privacy.html`)
+  and a step-by-step checklist.
+- **Data file names** are now `gymbro-state.json`, `gymbro-backup-*.json` and
+  `gymbro-plan-*.json`, and shared plans carry a `gymbro_plan` marker — plan files exported
+  from openGym still import unchanged.
+
+Everything below this line is openGym's history, kept as it was written.
+
 ## Unreleased
 
 ### The AI Coach

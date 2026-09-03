@@ -1,0 +1,98 @@
+# Builds the Android release artifacts: an .aab for Play and an .apk for sideloading/testing.
+#
+# Signing is optional on purpose. With the four ANDROID_* secrets set, both artifacts come out
+# signed and uploadable; without them the job still runs and produces an unsigned build, so a
+# fork or a first-time contributor can prove the release path works before anyone owns a key.
+#
+# Secrets (repo → Settings → Secrets and variables → Actions):
+#   ANDROID_KEYSTORE_BASE64     base64 of your .jks   (`base64 -w0 gymbro-release.jks`)
+#   ANDROID_KEYSTORE_PASSWORD   store password
+#   ANDROID_KEY_ALIAS           key alias (e.g. gymbro)
+#   ANDROID_KEY_PASSWORD        key password
+#   PLAY_SERVICE_ACCOUNT_JSON   optional — turns on the Play internal-track upload
+name: Android release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && 'yes' || 'no' }}
+      HAS_PLAY_KEY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' && 'yes' || 'no' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # Gradle 8.13 / AGP 8.11 want a JDK 17+; 21 is what Android Studio ships.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+      # Play requires new apps to target API 36 — the runner image doesn't always carry it.
+      - run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - run: npm ci
+        working-directory: frontend
+
+      # Bakes the offline flavor and the CDN media base, then `cap sync` into android/.
+      - run: npm run build:mobile
+        working-directory: frontend
+
+      - name: Decode keystore
+        if: env.HAS_KEYSTORE == 'yes'
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > frontend/android/release.jks
+
+      - name: Build AAB + APK
+        working-directory: frontend/android
+        env:
+          ANDROID_KEYSTORE_PATH: release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon bundleRelease assembleRelease
+
+      - name: Report what was built
+        run: |
+          echo "signed: ${{ env.HAS_KEYSTORE == 'yes' && 'yes' || 'NO — artifacts are unsigned' }}"
+          ls -lh frontend/android/app/build/outputs/bundle/release/ frontend/android/app/build/outputs/apk/release/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gymbro-android
+          if-no-files-found: error
+          path: |
+            frontend/android/app/build/outputs/bundle/release/*.aab
+            frontend/android/app/build/outputs/apk/release/*.apk
+
+      # Turns itself on the moment a Play service-account key exists. Until then the AAB is
+      # in the artifacts above and goes up through the Play Console by hand — which is what
+      # the first upload has to be anyway, since the listing doesn't exist yet.
+      - name: Upload to Play internal testing
+        if: env.HAS_KEYSTORE == 'yes' && env.HAS_PLAY_KEY == 'yes' && startsWith(github.ref, 'refs/tags/v')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: io.github.moyibr.gymbro
+          releaseFiles: frontend/android/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed
+
+      - name: Delete keystore
+        if: always()
+        run: rm -f frontend/android/release.jks

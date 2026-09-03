@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <!-- Launch screen source. Square because both platforms crop it to whatever the device is:
+       everything that matters stays in the middle third. No text — the file is rasterized by
+       sharp, whose font stack differs from the machine that generated it. -->
+  <rect width="2732" height="2732" fill="#0c0e12"/>
+  <g transform="translate(1366,1366) scale(3.4)" fill="#a3e635">
+    <rect x="-72" y="-10" width="144" height="20" rx="7"/>
+    <rect x="-80" y="-36" width="20" height="72" rx="7"/>
+    <rect x="-104" y="-25" width="17" height="50" rx="7"/>
+    <rect x="60" y="-36" width="20" height="72" rx="7"/>
+    <rect x="87" y="-25" width="17" height="50" rx="7"/>
+  </g>
+</svg>

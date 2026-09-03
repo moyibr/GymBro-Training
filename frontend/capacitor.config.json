@@ -1,9 +1,10 @@
 {
-  "appId": "ch.duartesantos.opengym",
-  "appName": "openGym",
+  "appId": "io.github.moyibr.gymbro",
+  "appName": "GymBro",
   "webDir": "dist",
   "backgroundColor": "#0c0e12",
   "android": {
-    "allowMixedContent": false
+    "allowMixedContent": false,
+    "adjustMarginsForEdgeToEdge": "auto"
   }
 }
